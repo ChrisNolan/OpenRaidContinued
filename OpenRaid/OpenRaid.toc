@@ -1,0 +1,22 @@
+## Interface: 60100
+## Title: OpenRaid
+## Version: 2.1
+## Author: Jeremybell
+## Notes: The AddOn for OpenRaid.org
+## SavedVariables: OR_db
+
+General\Locales.lua
+General\Utils.lua
+General\Options.lua
+General\Tutorial.lua
+General\Dev.lua
+
+DropdownMenus\DropdownMenus.xml
+DropdownMenus\DropdownMenus.lua
+
+OpenRaid.lua
+
+Core\Invite.lua
+Core\Rate.lua
+
+OpenRaid.xml

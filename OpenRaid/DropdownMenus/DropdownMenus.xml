@@ -1,0 +1,182 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ 
+ ..\..\FrameXML\UI.xsd">
+ 
+	<Script file="DropdownMenus.lua" />
+	
+	<Button name="OpenRaidDropDownButtonTemplate" virtual="true">
+		<Size x="125" y="16"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentHighlight" file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD" parentKey="Highlight" setAllPoints="true" hidden="true"/>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad>              
+                self:SetFrameLevel(self:GetParent():GetFrameLevel()+2);
+            </OnLoad>
+            <OnEnter>
+				GameTooltip:ClearLines();
+				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT");
+				GameTooltip:AddLine(self.tooltip);
+				GameTooltip:Show();
+                self.Highlight:Show();
+            </OnEnter>
+            <OnLeave>
+				GameTooltip:Hide();
+                self.Highlight:Hide();
+            </OnLeave>
+			<OnClick>
+				if self:GetText() ~= OpenRaid.L["No raids in database"] then
+					self:GetParent():GetParent():SetText(self:GetText());
+				else
+					self:GetParent():GetParent():SetText("Raid");
+				end
+				self:GetParent():Hide();
+			</OnClick>
+        </Scripts>
+        <ButtonText name="$parentNormalText">
+            <Anchors>
+                <Anchor point="LEFT">
+                    <Offset x="-5" y="0"/>
+                </Anchor>
+            </Anchors>
+        </ButtonText>
+        <NormalFont style="GameFontHighlightSmallLeft"/>
+        <HighlightFont style="GameFontHighlightSmallLeft"/>
+        <DisabledFont style="GameFontDisableSmallLeft"/>
+    </Button>
+	
+	<Frame name="OpenRaidDropDownListTemplate" enableMouse="true" parentKey="list" virtual="true">
+		<Size>
+			<AbsDimension x="150" y="50"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativeTo="$parent">
+				<Offset>
+					<AbsDimension x="0" y="-20" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\AddOns\OpenRaid\Images\FrameBackground" edgeFile="Interface\AddOns\OpenRaid\Images\FrameBorder">
+			<EdgeSize>
+				<AbsValue val="16" />
+			</EdgeSize>
+	
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5" />
+			</BackgroundInsets>
+		</Backdrop>
+		<Scripts>
+			<OnLoad>
+				self:SetFrameLevel(self:GetParent():GetFrameLevel() + 5);
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	
+	<Button name="OpenRaidDropDownTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="150" y="20"/>
+        </Size>
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativeTo="$parent">
+				<Offset>
+					<AbsDimension x="-10" y="-10" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		
+		<NormalTexture file="Interface\AddOns\OpenRaid\Images\Button">
+			<TexCoords left="0" right="1" top="0" bottom="1" />
+		</NormalTexture>
+	
+		<PushedTexture file="Interface\AddOns\OpenRaid\Images\Button">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</PushedTexture>
+
+		<DisabledTexture file="Interface\AddOns\OpenRaid\Images\Button">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</DisabledTexture>
+			
+		<HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</HighlightTexture>
+				
+		<NormalFont style="GameFontHighlightSmall" />
+		<HighlightFont style="GameFontHighlightSmall" />
+		<DisabledFont style="GameFontHighlightSmall" />
+		<PushedTextOffset x="0" y="0" />
+		
+		<Scripts>
+			<OnHide>
+                self.list:Hide();
+            </OnHide>
+			<OnClick>
+				if self.list:IsShown()then
+					self.list:Hide();
+				else
+					self.list:Show();
+				end
+			</OnClick>
+        </Scripts>
+    </Button>
+ 
+	<Button name="OpenRaidRaidDropDownTemplate" inherits="OpenRaidDropDownTemplate" virtual="true">
+        <Frames>
+			<Frame name="$parentList" inherits="OpenRaidDropDownListTemplate" hidden="true">
+				<Scripts>
+					<OnShow>
+						OpenRaidDropDownListUpdate(self);
+					</OnShow>
+				</Scripts>
+			</Frame>
+		</Frames>
+    </Button>
+	
+	<Button name="OpenRaidOptionsDropDownTemplate" inherits="OpenRaidDropDownTemplate" virtual="true">
+		<Frames>
+			<Frame name="$parentList" inherits="OpenRaidDropDownListTemplate" hidden="true">
+				<Scripts>
+					<OnLoad>
+						self:SetParent(self:GetParent():GetParent():GetParent())
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 5);
+						OpenRaidOptionsDropDownListUpdate(self);
+					</OnLoad>
+				</Scripts>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnShow>
+				local Children = {
+					["Index"] = OpenRaid.L["OptionsDropdown"]["Index"],
+					["Rate"] = OpenRaid.L["OptionsDropdown"]["Rate"],
+					["Add"] = OpenRaid.L["OptionsDropdown"]["Add"],
+					["CreateRaid"] = OpenRaid.L["OptionsDropdown"]["CreateRaid"],
+					["Invite"] = OpenRaid.L["OptionsDropdown"]["Invite"],
+				}
+				self:SetText(Children[OR_db.Options.Defaultpage]);
+			</OnShow>
+		</Scripts>
+	</Button>
+	
+	<Button name="OpenRaidRemoveRaidDropDownTemplate" inherits="OpenRaidDropDownTemplate" text="Remove raid" virtual="true">
+		<Frames>
+			<Frame name="$parentList" inherits="OpenRaidDropDownListTemplate" hidden="true">
+				<Scripts>
+					<OnLoad>
+						self:SetParent(self:GetParent():GetParent():GetParent())
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 5);
+					</OnLoad>
+					<OnShow>
+						OpenRaidDropDownListUpdate(self);
+					</OnShow>
+				</Scripts>
+			</Frame>
+		</Frames>
+	</Button>
+	
+ </Ui>

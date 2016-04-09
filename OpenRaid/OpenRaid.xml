@@ -1,0 +1,1331 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ 
+ ..\..\FrameXML\UI.xsd">
+ 
+	<!--____________________________________________OpenRaid Templates______________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	
+	<Button name="OpenRaidButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="86" y="20" />
+		</Size>
+		
+		<NormalTexture file="Interface\AddOns\OpenRaid\Images\Button">
+			<TexCoords left="0" right="1" top="0" bottom="1" />
+		</NormalTexture>
+	
+		<PushedTexture file="Interface\AddOns\OpenRaid\Images\Button">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</PushedTexture>
+
+		<DisabledTexture file="Interface\AddOns\OpenRaid\Images\Button">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</DisabledTexture>
+			
+		<HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</HighlightTexture>
+				
+		<NormalFont style="GameFontHighlightSmall" />
+		<HighlightFont style="GameFontHighlightSmall" />
+		<DisabledFont style="GameFontHighlightSmall" />
+		<PushedTextOffset x="0" y="0" />
+	</Button>
+	
+	<Button name="OpenRaidButtonBottomRightTemplate" inherits="OpenRaidButtonTemplate" virtual="true">
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativeTo="$parent" relativepoint="BOTTOMRIGHT">
+				<Offset>
+					<AbsDimension x="-7" y="-20" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	
+	<EditBox name="OpenRaidEditboxTemplate" inherits="InputBoxTemplate" autofocus="false" virtual="true">
+		<Scripts>
+			<OnEnterPressed>
+				self:ClearFocus();
+			</OnEnterPressed>
+			<OnEscapePressed>
+				EditBox_ClearFocus(self);
+			</OnEscapePressed>
+			<OnEditFocusLost>
+				EditBox_ClearHighlight(self);
+			</OnEditFocusLost>
+			<OnEditFocusGained>
+				EditBox_HighlightText(self);
+			</OnEditFocusGained>
+		</Scripts>
+	</EditBox>
+	
+	<Button name="OpenRaidScrollUpButtonTemplate" parentKey="ScrollUpButton" virtual="true">
+		<Anchors>
+			<Anchor point="BOTTOM" relativePoint="TOP"/>
+		</Anchors>
+		<Scripts>
+			<OnClick>
+				local parent = self:GetParent();
+				local scrollStep = self:GetParent().scrollStep or (parent:GetHeight() / 2);
+				parent:SetValue(parent:GetValue() - scrollStep);
+				PlaySound("UChatScrollButton");
+			</OnClick>
+		</Scripts>
+        <Size>
+            <AbsDimension x="18" y="16"/>
+        </Size>
+        <NormalTexture inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\ScrollUpButton-Up"/>
+        <PushedTexture inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\ScrollUpButton-Down"/>
+        <DisabledTexture inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\ScrollUpButton-Disabled"/>
+        <HighlightTexture inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\ScrollUpButton-Highlight" alphaMode="ADD"/>
+    </Button>
+	
+	<Button name="OpenRaidScrollDownButtonTemplate" parentKey="ScrollDownButton" virtual="true">
+        <Size>
+            <AbsDimension x="18" y="16"/>
+        </Size>
+		<Anchors>
+			<Anchor point="TOP" relativePoint="BOTTOM"/>
+		</Anchors>
+		<Scripts>
+			<OnClick>
+				local parent = self:GetParent();
+				local scrollStep = self:GetParent().scrollStep or (parent:GetHeight() / 2);
+				parent:SetValue(parent:GetValue() + scrollStep);
+				PlaySound("UChatScrollButton");
+			</OnClick>
+		</Scripts>
+        <NormalTexture inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\ScrollDownButton-Up"/>
+        <PushedTexture inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\ScrollDownButton-Down"/>
+        <DisabledTexture inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\ScrollDownButton-Disabled"/>
+        <HighlightTexture inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\ScrollDownButton-Highlight" alphaMode="ADD"/>
+    </Button>
+	
+	<Slider name="OpenRaidScrollBarTemplate" parentKey="ScrollBar" virtual="true">
+		<Size>
+            <AbsDimension x="16" y="0"/>
+        </Size>
+		<Scripts>
+            <OnValueChanged>
+                self:GetParent():SetVerticalScroll(value);
+            </OnValueChanged>
+        </Scripts>
+        <Frames>
+            <Button name="$parentScrollUpButton" inherits="OpenRaidScrollUpButtonTemplate" />
+            <Button name="$parentScrollDownButton" inherits="OpenRaidScrollDownButtonTemplate" />
+        </Frames>
+        <ThumbTexture name="$parentThumbTexture" inherits="UIPanelScrollBarButton" file="Interface\AddOns\OpenRaid\Images\Scrollbar_knob">
+            <Size>
+                <AbsDimension x="18" y="24"/>
+            </Size>
+            <TexCoords left="0.20" right="0.80" top="0.125" bottom="0.875"/>
+        </ThumbTexture>
+    </Slider>
+	
+	<ScrollFrame name="OpenRaidScrollFrameTemplate" virtual="true">
+        <Frames>
+            <Slider name="$parentScrollBar" inherits="OpenRaidScrollBarTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-16" y="-16"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-16" y="16"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Slider>
+        </Frames>
+		<ScrollChild>
+            <Frame name="$parentScrollChildFrame">
+                <Size>
+                    <AbsDimension x="300" y="334"/>
+                </Size>
+            </Frame>
+        </ScrollChild>
+		<Scripts>
+			<OnLoad>
+                ScrollFrame_OnLoad(self);
+            </OnLoad>
+			<OnScrollRangeChanged>
+                ScrollFrame_OnScrollRangeChanged(self, xrange, yrange);
+            </OnScrollRangeChanged>
+            <!--  The code to disable the ScrollDownButton is pretty hacked, but it works -->
+            <OnVerticalScroll>
+                local scrollbar = _G[self:GetName().."ScrollBar"];
+                scrollbar:SetValue(offset);
+                local min;
+                local max;
+                min, max = scrollbar:GetMinMaxValues();
+                if ( offset == 0 ) then
+                    _G[scrollbar:GetName().."ScrollUpButton"]:Disable();
+                else
+                    _G[scrollbar:GetName().."ScrollUpButton"]:Enable();
+                end
+                if ((scrollbar:GetValue() - max) == 0) then
+                    _G[scrollbar:GetName().."ScrollDownButton"]:Disable();
+                else
+                    _G[scrollbar:GetName().."ScrollDownButton"]:Enable();
+                end
+            </OnVerticalScroll>
+            <OnMouseWheel>
+                ScrollFrameTemplate_OnMouseWheel(self, delta);
+            </OnMouseWheel>
+		</Scripts>
+    </ScrollFrame>
+	
+	<ScrollFrame name="OpenRaidScrollFrameEditboxTemplate" inherits="OpenRaidScrollFrameTemplate" enableMouse="true" virtual="true">
+		<Size x="450" y="210"/>
+		<Anchors>
+			<Anchor point="TOPLEFT" x="7" y="-5"/>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				ScrollFrame_OnLoad(self);
+				self.ScrollBar:ClearAllPoints();
+				self.ScrollBar:SetPoint("TOPLEFT", self, "TOPRIGHT", -5, -18);
+				self.ScrollBar:SetPoint("BOTTOMLEFT", self, "BOTTOMRIGHT", -5, 16);
+			</OnLoad>
+			<OnMouseDown>
+				EditBox_SetFocus(self.EditBox);
+			</OnMouseDown>
+		</Scripts>
+	</ScrollFrame>
+	
+	<EditBox name="OpenRaidEditBoxInputTemplate" multiLine="true" autoFocus="false" parentKey="EditBox" virtual="true">
+		<Size>
+			<AbsDimension x="440" y="200" />
+		</Size>
+		<Scripts>
+			<OnUpdate>
+				ScrollingEdit_OnUpdate(self, elapsed, self:GetParent());
+			</OnUpdate>
+			<OnEnterPressed>
+				EditBox_ClearFocus(self);
+			</OnEnterPressed>
+			<OnEscapePressed>
+				EditBox_ClearFocus(self);
+			</OnEscapePressed>
+			<OnEditFocusLost>
+				EditBox_ClearHighlight(self);
+			</OnEditFocusLost>
+			<OnEditFocusGained>
+				EditBox_HighlightText(self);
+				self:SetText("");
+			</OnEditFocusGained>
+			<OnShow>
+				self:SetText("");
+			</OnShow>
+		</Scripts>
+		<FontString inherits="ChatFontNormal"/>
+	</EditBox>
+	
+	<Button name="OpenRaidCalendarButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="40" y="30" />
+		</Size>
+		
+		<NormalTexture file="Interface\AddOns\OpenRaid\Images\Calendar-Button-Up">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</NormalTexture>
+	
+		<PushedTexture file="Interface\AddOns\OpenRaid\Images\Calendar-Button-Down">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</PushedTexture>
+
+		<DisabledTexture file="Interface\AddOns\OpenRaid\Images\Calendar-Button-Disabled">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</DisabledTexture>
+			
+		<HighlightTexture file="Interface\AddOns\OpenRaid\Images\Calendar-Button-Highlight" alphaMode="ADD">
+			<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</HighlightTexture>
+				
+		<NormalFont style="GameFontHighlightSmall" />
+		<HighlightFont style="GameFontHighlightSmall" />
+		<DisabledFont style="GameFontHighlightSmall" />
+		<PushedTextOffset x="0" y="0" />
+		<Scripts>
+			<OnLoad>
+				self:SetBackdropBorderColor(0,0,0,0)
+			</OnLoad>
+		</Scripts>
+	</Button>
+	
+	<Frame name="OpenRaidNewsTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="450" y="215" />
+		</Size>
+		<Scripts>
+			<OnLoad>
+				OpenRaidFakebackdrop(self)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	
+	<Frame name="OpenRaidChildFrameTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="500" y="250" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="$parent" />
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				OpenRaidFakebackdrop(self)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	
+	<Frame name="OpenRaidBorderTemplate" virtual="true">
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="$parent" x="0" y="0"/>
+			<Anchor point="BOTTOMRIGHT" relativeTo="$parent" x="0" y="0"/>
+		</Anchors>
+		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<EdgeSize>
+				<AbsValue val="16"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="16"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Scripts>
+			<OnLoad>
+				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+				self:SetBackdropColor(0, 0, 0);
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	
+	<Frame name="OpenRaidBorderContainerTemplate" virtual="true">
+		<Size x="475" y="225" />
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="$parent">
+				<Offset>
+					<AbsDimension x="7" y="-35" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Frames>
+			<ScrollFrame name="$parentScrollFrame" inherits="OpenRaidScrollFrameEditboxTemplate">
+				<ScrollChild>
+					<EditBox name="$parentEditBox" inherits="OpenRaidEditBoxInputTemplate"/>
+				</ScrollChild>
+			</ScrollFrame>
+			<Frame inherits="OpenRaidBorderTemplate" />
+		</Frames>
+	</Frame>
+	
+	<Button name="OpenRaidRemoveFriendsFrameEntryTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="150" y="16" />
+		</Size>
+		<NormalFont style="GameFontHighlightLeft"/>
+	</Button>
+	
+	<StatusBar name="OpenRaidFrameInviteStatusBarTemplate" defaultvalue="1" maxValue="1" inherits="TextStatusBar" virtual="true">
+		<Size>
+			<AbsDimension x="25" y="75"/>
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT" relativePoint="RIGHT">
+				<Offset>
+					<AbsDimension x="-150" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+		<Scripts>
+			<OnSizeChanged>
+				OpenRaidGameTooltip(self, OpenRaidGetInviteTooltip(self:GetName()))
+			</OnSizeChanged>
+		</Scripts>
+	</StatusBar>
+	
+	<FontString name="OpenRaidStringTemplate" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<Color r="1" g="1" b="1" a="1"/>
+		<FontHeight val="20"/>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="15" y="-15" />
+		</Anchors>
+	</FontString>
+	
+	<!--____________________________________________OpenRaid Frame__________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<Frame name="OpenRaidFrame" enableMouse="true" parent="UIParent" movable="true">
+		<Size>
+			<AbsDimension x="500" y="300" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="UIParent" />
+		</Anchors>
+		<Backdrop bgFile="Interface\AddOns\OpenRaid\Images\Background">
+			<EdgeSize>
+				<AbsValue val="16" />
+			</EdgeSize>
+			
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5" />
+			</BackgroundInsets>
+		</Backdrop>
+		<Frames>
+			<Button name="$parentCancel" inherits="OpenRaidButtonTemplate" text="Cancel">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="7" y="10" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						OpenRaidTabs(OpenRaidFrame, "None");
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentNext" inherits="OpenRaidButtonTemplate" text="Next">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="-7" y="7" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						OpenRaidTabs(OpenRaidFrame, "Next");
+					</OnClick>		
+				</Scripts>
+			</Button>
+			<Frame name="$parentTutorial" hidden="true">
+				<Size>
+					<AbsDimension x="450" y="100" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent" relativepoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="150" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\AddOns\OpenRaid\Images\FrameBackground" edgeFile="Interface\AddOns\OpenRaid\Images\FrameBorder">
+					<EdgeSize>
+						<AbsValue val="16" />
+					</EdgeSize>
+			
+					<TileSize>
+						<AbsValue val="32" />
+					</TileSize>
+					<BackgroundInsets>
+						<AbsInset left="5" right="5" top="5" bottom="5" />
+					</BackgroundInsets>
+				</Backdrop>
+				<Frames>
+					<Button name="$parentNext" inherits="OpenRaidButtonTemplate" text="Next step">
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="-7" y="7" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidTutorialNext()
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+	<!--____________________________________________Main menu_______________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+			<Frame name="$parentMenu">
+				<Size>
+					<AbsDimension x="100" y="250" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativepoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="95" y="-3" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\AddOns\OpenRaid\Images\FrameBackground" edgeFile="Interface\AddOns\OpenRaid\Images\FrameBorder">
+					<EdgeSize>
+						<AbsValue val="16" />
+					</EdgeSize>
+			
+					<TileSize>
+						<AbsValue val="32" />
+					</TileSize>
+					<BackgroundInsets>
+						<AbsInset left="5" right="5" top="5" bottom="5" />
+					</BackgroundInsets>
+				</Backdrop>
+				<Frames>
+					<Button name="$parentCreate" inherits="OpenRaidButtonTemplate" text="Import raids">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="7" y="-7" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidTabs(OpenRaidFrame, "CreateRaid");
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Import data"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentCalendar" inherits="OpenRaidButtonTemplate" text="Calendar">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parentCreate">
+								<Offset>
+									<AbsDimension x="0" y="-20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidTabs(OpenRaidFrame, "Calendar");
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, "Calendar");
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentAdd" inherits="OpenRaidButtonTemplate" text="Send requests">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parentCalendar">
+								<Offset>
+									<AbsDimension x="0" y="-20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidTabs(OpenRaidFrame, "Add");
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Send requests"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentInvite" inherits="OpenRaidButtonTemplate" text="Invite">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parentAdd">
+								<Offset>
+									<AbsDimension x="0" y="-20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidTabs(OpenRaidFrame, "Invite");
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Invite people"]);
+							</OnLoad>						
+						</Scripts>
+					</Button>
+					<Button name="$parentRate" inherits="OpenRaidButtonTemplate" text="Edit ratings">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parentInvite">
+								<Offset>
+									<AbsDimension x="0" y="-20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidTabs(OpenRaidFrame, "Rate");
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Rate people"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentRemove" inherits="OpenRaidButtonTemplate" text="Remove friends">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parentRate">
+								<Offset>
+									<AbsDimension x="0" y="-20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidRemoveFriends();
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Remove friends"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentHome" inherits="OpenRaidButtonTemplate" text="Home">
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="-7" y="7" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidTabs(OpenRaidFrame, "Index");
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, "News page");
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentOptions" inherits="OpenRaidButtonTemplate" text="Options">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parentHome">
+								<Offset>
+									<AbsDimension x="0" y="20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidTabs(OpenRaidFrame, "Options");
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, "Options");
+							</OnLoad>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+	<!--____________________________________________Index page______________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+			<Frame name="$parentIndex" inherits="OpenRaidChildFrameTemplate" hidden="true">
+				<Size>
+					<AbsDimension x="450" y="250" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="20" y="-20" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<!--
+					<Button name="$parentLeft">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="5" y="-5" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\AddOns\OpenRaid\Images\PrevPage-Up"/>
+                        <PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
+                        <DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
+                        <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+						<Scripts>
+							<OnClick>
+								OpenRaidNewsfeedupdate(-455)
+							</OnClick>
+							<OnLoad>
+								self:SetBackdropBorderColor(0,0,0,0)
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentTitle" text="Title">
+						<Size>
+							<AbsDimension x="50" y="15" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="0" y="-15" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalFont style="GameFontHighlightMedium" />
+						<HighlightFont style="GameFontHighlightMedium" />
+						<DisabledFont style="GameFontHighlightMedium" />
+						<PushedTextOffset x="0" y="0" />
+					</Button>
+					<Button name="$parentRight">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="-5" y="-5" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\AddOns\OpenRaid\Images\NextPage-Up"/>
+                        <PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
+                        <DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
+                        <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+						<Scripts>
+							<OnClick>
+								OpenRaidNewsfeedupdate(455)
+							</OnClick>
+							<OnLoad>
+								self:SetBackdropBorderColor(0,0,0,0)
+							</OnLoad>
+						</Scripts>
+					</Button>-->
+				</Frames>
+				<Scripts>
+					<OnShow>
+						OpenRaidCreateFontString("Welcome", self, "TOPLEFT", self, "TOPLEFT", 0, 0, "Welcome to the OpenRaid addon!\n\nUse the tabs on the right to get started. Import your raids,\nsend requests to start your group or evaluate your previous events.", "LEFT");
+						--[[if self.logo then
+							return
+						end
+						local logo = self:CreateTexture(nil, "BACKGROUND")
+						logo:SetPoint("CENTER")
+						local Faction = UnitFactionGroup("player");
+						if Faction == "Horde" then
+							logo:SetTexture("Interface\\AddOns\\OpenRaid\\Images\\logo_wow_horde");
+						else 	<!--Pandaren should be Alliance, For The Alliance! (A) -->
+							logo:SetTexture("Interface\\AddOns\\OpenRaid\\Images\\logo_wow_alliance");
+						end
+						self.logo = true;]]
+					</OnShow>
+				</Scripts>
+			</Frame>
+	<!--____________________________________________CalendarFrame_________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+			<Frame name="$parentCalendar" inherits="OpenRaidChildFrameTemplate" hidden="true">
+				<Size>
+					<AbsDimension x="400" y="250" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="20" y="-20" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Button name="$parentLeft">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="5" y="-5" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\AddOns\OpenRaid\Images\PrevPage-Up"/>
+                        <PushedTexture file="Interface\AddOns\OpenRaid\Images\PrevPage-Up"/>
+                        <DisabledTexture file="Interface\AddOns\OpenRaid\Images\PrevPage-Up"/>
+                        <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+						<Scripts>
+							<OnClick>
+								OpenRaidCalendarPrev()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentTitle" text="Title">
+						<Size>
+							<AbsDimension x="50" y="15" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="0" y="5" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalFont style="GameFontHighlightMedium" />
+						<HighlightFont style="GameFontHighlightMedium" />
+						<DisabledFont style="GameFontHighlightMedium" />
+						<PushedTextOffset x="0" y="0" />
+					</Button>
+					<Button name="$parentRight">
+						<Size>
+							<AbsDimension x="32" y="32" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="-5" y="-5" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\AddOns\OpenRaid\Images\NextPage-Up"/>
+                        <PushedTexture file="Interface\AddOns\OpenRaid\Images\NextPage-Up"/>
+                        <DisabledTexture file="Interface\AddOns\OpenRaid\Images\NextPage-Up"/>
+                        <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+						<Scripts>
+							<OnClick>
+								OpenRaidCalendarNext()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Frame name="$parentPopup" alpha="1" enableMouse="true" hidden="true">
+						<Size>
+							<AbsDimension x="400" y="250" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="10" y="-10" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Backdrop bgFile="Interface\AddOns\OpenRaid\Images\FrameBackground" edgeFile="Interface\AddOns\OpenRaid\Images\FrameBorder">
+							<EdgeSize>
+								<AbsValue val="16" />
+							</EdgeSize>
+					
+							<TileSize>
+								<AbsValue val="32" />
+							</TileSize>
+							<BackgroundInsets>
+								<AbsInset left="5" right="5" top="5" bottom="5" />
+							</BackgroundInsets>
+						</Backdrop>
+						<Frames>
+							<Button name="$parentCancel" inherits="OpenRaidButtonTemplate" text="Hide">
+								<Anchors>
+									<Anchor point="BOTTOMLEFT" relativeTo="$parent">
+										<Offset>
+											<AbsDimension x="7" y="7" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnClick>
+										self:GetParent():Hide()
+									</OnClick>
+								</Scripts>
+							</Button>
+							<ScrollFrame name="$parentList" inherits="OpenRaidScrollFrameTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent">
+										<Offset>
+											<AbsDimension x="15" y="-40" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Size>
+									<AbsDimension x="300" y="175" />
+								</Size>
+								<ScrollChild>
+									<Frame name="$parentText">
+										<Size>
+											<AbsDimension x="300" y="200" />
+										</Size>
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentInfo" font="Fonts\FRIZQT__.TTF" justifyH="LEFT">
+													<Color r="1" g="1" b="1" a="1"/>
+													<FontHeight val="15"/>
+													<Anchors>
+														<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="0" y="0" />
+													</Anchors>
+												</FontString>
+											</Layer>
+										</Layers>
+									</Frame>
+								</ScrollChild>
+							</ScrollFrame>
+						</Frames>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString name="$parentString" inherits="OpenRaidStringTemplate" text="Raid info." />
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnLoad>
+								self:SetFrameLevel(self:GetParent():GetFrameLevel() + 5);
+							</OnLoad>
+						</Scripts>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnShow>
+						OpenRaidCalendarCurrentUpdate()
+					</OnShow>
+				</Scripts>
+			</Frame>
+	<!--____________________________________________CreateRaidFrame_________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+			<Frame name="$parentCreateRaid" inherits="OpenRaidChildFrameTemplate" hidden="true">
+				<Frames>
+					<Frame name="$parentBorder" inherits="OpenRaidBorderContainerTemplate" />
+					<Button name="$parentDataWrite" inherits="OpenRaidButtonBottomRightTemplate" text="Save">
+						<Scripts>
+							<OnClick>
+								OpenRaidCreateRaid();
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Create Raid Tooltip"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+				</Frames>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentString" inherits="OpenRaidStringTemplate" text="Import raids" />
+					</Layer>
+				</Layers>
+			</Frame>
+	<!--____________________________________________AddfriendsFrame_____________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+			<Frame name="$parentAdd" inherits="OpenRaidChildFrameTemplate" hidden="true">
+				<Frames>
+					<Frame name="$parentBorder" inherits="OpenRaidBorderContainerTemplate" />
+					<Button name="$parentRaid" inherits="OpenRaidRaidDropDownTemplate" />
+					<Button name="$parentDataWrite" inherits="OpenRaidButtonBottomRightTemplate" text="Send">
+						<Scripts>
+							<OnShow>
+								OpenRaidFrameAddBorderScrollFrame.EditBox:SetText("")
+							</OnShow>
+							<OnClick>
+								OpenRaidSendRequests()
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Add Tooltip"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+				</Frames>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentString" inherits="OpenRaidStringTemplate" text="Add friends" />
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnShow>
+						OpenRaidFrameAddRaid:SetText("Raid");
+					</OnShow>
+				</Scripts>
+			</Frame>
+	<!--____________________________________________InvitetoGroupFrame_____________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+			<Frame name="$parentInvite" inherits="OpenRaidChildFrameTemplate" hidden="true">
+				<Frames>
+					<Frame name="$parentBorder" inherits="OpenRaidBorderContainerTemplate" />
+					<Button name="$parentRaid" inherits="OpenRaidRaidDropDownTemplate" />
+					<Button name="$parentPlusInvite" inherits="OpenRaidButtonTemplate" text="Use whisper invite">
+						<Size>
+							<AbsDimension x="106" y="20" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parent" relativepoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-20" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								OpenRaidToggleWordInvite()
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["PlusInvite Tooltip"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentDataWrite" inherits="OpenRaidButtonBottomRightTemplate" text="Start inviting">
+						<Scripts>
+							<OnClick>
+								OpenRaidInvite()
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Invite Tooltip"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Frame name="$parentProgress" hidden="true">
+						<Size>
+							<AbsDimension x="150" y="75" />
+						</Size>
+						<Anchors>
+							<Anchor point="CENTER" relativeTo="$parent" relativepoint="CENTER">
+								<Offset>
+									<AbsDimension x="0" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Frames>
+							<StatusBar name="OpenRaidFrameInviteProgressBarFailed" inherits="OpenRaidFrameInviteStatusBarTemplate">
+								<BarColor r="1.0" g="0.0" b="0.0"/>
+							</StatusBar>
+							<StatusBar name="OpenRaidFrameInviteProgressBarResponded" inherits="OpenRaidFrameInviteStatusBarTemplate">
+								<Anchors>
+									<Anchor point="LEFT" relativeTo="OpenRaidFrameInviteProgressBarFailed" relativepoint="RIGHT" />
+								</Anchors>
+								<BarColor r="1.0" g="0.4" b="0.0"/>
+							</StatusBar>
+							<StatusBar name="OpenRaidFrameInviteProgressBarInvited" inherits="OpenRaidFrameInviteStatusBarTemplate">
+								<Anchors>
+									<Anchor point="LEFT" relativeTo="OpenRaidFrameInviteProgressBarResponded" relativepoint="RIGHT" />
+								</Anchors>
+								<BarColor r="0.0" g="1.0" b="0.0"/>
+							</StatusBar>
+						</Frames>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString name="$parentString" inherits="OpenRaidStringTemplate" text="Invites have been started">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="OpenRaidFrameInvite" relativePoint="TOPLEFT" x="15" y="-45" />
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="$parentList" hidden="true">
+						<Size>
+							<AbsDimension x="485" y="225" />
+						</Size>
+						<Anchors>
+							<Anchor point="CENTER" relativeTo="$parent" relativepoint="CENTER">
+								<Offset>
+									<AbsDimension x="0" y="-25" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Frames>
+							<Button name="$parentCancel" inherits="OpenRaidButtonTemplate" text="Hide">
+								<Anchors>
+									<Anchor point="BOTTOMLEFT" relativeTo="$parent">
+										<Offset>
+											<AbsDimension x="7" y="10" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnClick>
+										self:GetParent():Hide();
+										OpenRaidFrameInviteBorder:Show();
+									</OnClick>
+								</Scripts>
+							</Button>
+							<Frame name="$parentBorder" inherits="OpenRaidBorderTemplate" />
+						</Frames>
+						<Scripts>
+							<OnShow>
+								OpenRaidInviteListUpdate();
+							</OnShow>
+						</Scripts>
+					</Frame>
+				</Frames>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentString" font="Fonts\FRIZQT__.TTF" text="Invite friends">
+							<Color r="1" g="1" b="1" a="1"/>
+							<FontHeight val="20"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="15" y="-15" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnShow>
+						OpenRaidFrameInviteRaid:SetText("Raid");
+					</OnShow>
+				</Scripts>
+			</Frame>
+	<!--____________________________________________RateFrame______________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+			<Frame name="$parentRate" inherits="OpenRaidChildFrameTemplate" hidden="true">
+				<Frames>
+					<ScrollFrame name="$parentGroup">
+						<Size>
+							<AbsDimension x="200" y="285" />
+						</Size>
+						<Backdrop bgFile="Interface\AddOns\OpenRaid\Images\FrameBackground" edgeFile="Interface\AddOns\OpenRaid\Images\FrameBorder">
+							<EdgeSize>
+								<AbsValue val="16" />
+							</EdgeSize>
+					
+							<TileSize>
+								<AbsValue val="32" />
+							</TileSize>
+							<BackgroundInsets>
+								<AbsInset left="5" right="5" top="5" bottom="5" />
+							</BackgroundInsets>
+						</Backdrop>
+						<Anchors>
+							<Anchor point="RIGHT" relativeTo="$parent" relativepoint="LEFT">
+								<Offset>
+									<AbsDimension x="6" y="-25" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<ScrollChild>
+							<Frame name="OpenRaidFrameRateGroupContainer">
+								<Size>
+									<AbsDimension x="200" y="250" />
+								</Size>
+							</Frame>
+						</ScrollChild>
+						<Frames>
+							<Slider name="$parentScrollBar" inherits="OpenRaidScrollBarTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+										<Offset>
+											<AbsDimension x="-20" y="-20"/>
+										</Offset>
+									</Anchor>
+									<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+										<Offset>
+											<AbsDimension x="-20" y="50"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Slider>
+							<Button name="$parentLog" inherits="OpenRaidButtonTemplate" text="Log raid">
+								<Anchors>
+									<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativepoint="BOTTOMLEFT">
+										<Offset>
+											<AbsDimension x="5" y="5" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnClick>
+										UpdateRaidLog();
+									</OnClick>
+								</Scripts>
+							</Button>
+						</Frames>
+						<Scripts>
+							<OnLoad>
+								ScrollFrame_OnLoad(self);
+							</OnLoad>
+							<OnScrollRangeChanged>
+								ScrollFrame_OnScrollRangeChanged(self, xrange, yrange);
+							</OnScrollRangeChanged>
+							<!--  The code to disable the ScrollDownButton is pretty hacked, but it works -->
+							<OnVerticalScroll>
+								local scrollbar = _G[self:GetName().."ScrollBar"];
+								scrollbar:SetValue(offset);
+								local min;
+								local max;
+								min, max = scrollbar:GetMinMaxValues();
+								if ( offset == 0 ) then
+									_G[scrollbar:GetName().."ScrollUpButton"]:Disable();
+								else
+									_G[scrollbar:GetName().."ScrollUpButton"]:Enable();
+								end
+								if ((scrollbar:GetValue() - max) == 0) then
+									_G[scrollbar:GetName().."ScrollDownButton"]:Disable();
+								else
+									_G[scrollbar:GetName().."ScrollDownButton"]:Enable();
+								end
+							</OnVerticalScroll>
+							<OnMouseWheel>
+								ScrollFrameTemplate_OnMouseWheel(self, delta);
+							</OnMouseWheel>
+						</Scripts>
+					</ScrollFrame>
+					<Button name="$parentRaid" inherits="OpenRaidRaidDropDownTemplate" />
+					<Button name="$parentFinalize" inherits="OpenRaidButtonBottomRightTemplate" text="Finalize ratings">
+						<Scripts>
+							<OnClick>
+								OpenRaidGetRates()
+							</OnClick>
+							<OnLoad>
+								OpenRaidGameTooltip(self, OpenRaid.L["Finalize ratings tooltip"]);
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<ScrollFrame name="OpenRaidFrameRateSF" inherits="OpenRaidScrollFrameTemplate">
+						<Size>
+							<AbsDimension x="450" y="215" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="5" y="-35" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<ScrollChild>
+							<Frame name="OpenRaidFrameRateContainer">
+								<Size>
+									<AbsDimension x="500" y="211" />
+								</Size>
+								<Anchor point="TOPLEFT" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="0" y="0" />
+									</Offset>
+								</Anchor>
+							</Frame>
+						</ScrollChild>
+					</ScrollFrame>
+				</Frames>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentString" inherits="OpenRaidStringTemplate" text="Ratings">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="15" y="-12">
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						self.Boxes = 0
+					</OnLoad>
+					<OnShow>
+						OpenRaidFrameRateRaid:SetText("Raid");
+						OR_db.Group = {};
+						OpenRaidRateBoxes(OpenRaidFrame);
+						OpenRaidFrameOnEvent(OpenRaidFrame, "GROUP_ROSTER_UPDATE"); <!--Fake event to get groupupdate() -->
+					</OnShow>
+				</Scripts>
+			</Frame>
+	<!--____________________________________________OptionsFrame______________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+	<!--____________________________________________________________________________________________________________________________-->
+			<ScrollFrame name="$parentOptions" inherits="OpenRaidScrollFrameTemplate" hidden="true">
+				<Size>
+					<AbsDimension x="450" y="250" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="0" y="-7" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						OpenRaidFakebackdrop(self)
+					</OnLoad>
+				</Scripts>
+				<ScrollChild>
+					<Frame name="OpenRaidFrameOptionsContainer">
+						<Size>
+							<AbsDimension x="500" y="250" />
+						</Size>
+					</Frame>
+				</ScrollChild>
+				<Frames>
+					<Button name="$parentReset" inherits="OpenRaidButtonTemplate" text="Reset">
+						<Scripts>
+							<OnLoad>
+								OpenRaidGameTooltip(self, "Reset the database");
+								print("Doesnt do anything yet.")
+							</OnLoad>
+						</Scripts>
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parent" relativepoint="BOTTOMRIGHT">
+								<Offset>
+									<AbsDimension x="43" y="-13" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</Button>
+				</Frames>
+			</ScrollFrame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:RegisterEvent("GROUP_ROSTER_UPDATE");
+				self:RegisterEvent("ADDON_LOADED");
+				self:RegisterEvent("PLAYER_ENTERING_WORLD");
+				self:Hide();
+				self.NumTab = nil;
+				self.CurrentTab = nil;
+				self:RegisterForDrag("LeftButton");
+			</OnLoad>
+			<OnEvent>
+				OpenRaidFrameOnEvent(self, event, ...)
+			</OnEvent>
+			<OnDragStart>
+				if not self.isLocked then
+					self:StartMoving();
+				end
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+			<OnHide>
+				self:StopMovingOrSizing();
+			</OnHide>
+		</Scripts>
+	</Frame>
+	
+	<Frame name="RealIDCounterFrame" movable="false" parent="FriendsTabHeaderTab3">
+        <Size>
+			<AbsDimension x="50" y="20" />
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="FriendsFrameBattlenetFrame" relativePoint="RIGHT" x="-20" y="0" />
+		</Anchors>
+		<Backdrop bgFile="Interface/Tooltips/UI-Tooltip-Background">
+			<EdgeSize>
+				<AbsValue val="16" />
+			</EdgeSize>
+			
+			<TileSize>
+				<AbsValue val="16" />
+			</TileSize>
+			
+			<BackgroundInsets>
+				<AbsInset left="4" right="4" top="4" bottom="4" />
+			</BackgroundInsets>
+		</Backdrop>
+		<Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentString" font="Fonts\FRIZQT__.TTF" text="X/100" parent="RealIDCounterFrame">
+                    <Color r="0.1" g="1" b="0.1" a="1"/>
+                    <FontHeight val="11"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="FriendsFrameBattlenetFrame" relativePoint="RIGHT" x="-20" y="0" />
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad>
+                RealIDCounterFrame:RegisterEvent("BN_FRIEND_LIST_SIZE_CHANGED");
+                local k,_ = BNGetNumFriends();
+                RealIDCounterFrameString:SetText("Real ID:\n"..k.."/100");
+				self:SetBackdropColor(0,0,0,0);
+				self:SetBackdropBorderColor(0,0,0,0);
+            </OnLoad>
+            <OnEvent>
+                local k,_ = BNGetNumFriends();
+                RealIDCounterFrameString:SetText("Real ID:\n"..k.."/100");
+            </OnEvent>
+        </Scripts>
+    </Frame>
+ </Ui>
