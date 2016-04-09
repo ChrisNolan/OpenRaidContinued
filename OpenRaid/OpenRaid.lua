@@ -27,7 +27,7 @@ local BNGetFriendInfo = BNGetFriendInfo;
 local BNGetNumFriends = BNGetNumFriends;
 local BNInviteFriend = BNInviteFriend;
 local BNSetFriendNote = BNSetFriendNote;
-local BNGetToonInfo = BNGetToonInfo;
+local BNGetGameAccountInfo = BNGetGameAccountInfo;
 local floor = floor;
 local format = string.format;
 local getn = getTableLength;
@@ -1461,7 +1461,7 @@ do
 					if not IsInRaid() and GetNumGroupMembers(LE_PARTY_CATEGORY_HOME) > 3  then --When someone wants an invite and party is full, converts to raid
 						ConvertToRaid();
 					end
-					local toonID = select(16, BNGetToonInfo(ID));
+					local toonID = select(16, BNGetGameAccountInfo(ID));
 					BNInviteFriend(toonID);
 				end
 			end

@@ -1,7 +1,7 @@
 local L = OpenRaid.L;
 local Pname = OpenRaid.Pname;
 
-local BNGetToonInfo = BNGetToonInfo;
+local BNGetGameAccountInfo = BNGetGameAccountInfo;
 local getn = getTableLength;
 
 local Timer = CreateFrame("Frame");
@@ -28,7 +28,7 @@ GetSlackers:SetScript("OnEvent", function(self, event, ...)
 	local ID = ...;
 	local _, _, battleTag, _, _, toonID = BNGetFriendInfoByID(ID)
 	if not battleTag then return end
-	local _, toonName, _, realmName = BNGetToonInfo(toonID)
+	local _, toonName, _, realmName = BNGetGameAccountInfo(toonID)
 	for k,v in pairs(Pending) do
 		local BNInfo = { strsplit("-", k) }
 		if strlower(BNInfo[1]) == strlower(battleTag) then
@@ -140,7 +140,7 @@ local function TryInviteBNFriend(BNFriend)
 			if strlower(BNInfo[1]) == strlower(battleTag or "") then
 				Pending[BNFriend] = nil;
 				if isOnline then
-					local _, toonName, _, realmName = BNGetToonInfo(toonID)
+					local _, toonName, _, realmName = BNGetGameAccountInfo(toonID)
 					if toonName == BNInfo[2] and realmName == BNInfo[3] then
 						BNInviteFriend(toonID)
 						BNSendWhisper(ID, L["Invite for event"])
