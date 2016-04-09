@@ -48,6 +48,7 @@
 		["Import data"] = "Import raid data to update your time events and signed people",
 		["Import string corrupt"] = "The string you were trying to import is incorrect or corrupt.",
 		["Invite for event wrong character"] = "I wanted to invite you for my OpenRaid event, but you are on the wrong character (%s). Please log your character you signed up with (%s).",
+		["Invite for event wrong app"] = "I wanted to invite you for my OpenRaid event, but you aren't playing WoW.  Please log in as %s and let me know when you're ready.",
 		["Invite for event"] = "Hail %s!  I'm inviting you for my OpenRaid event.",
 		["Invite people"] = "Invite the people who signed up for your event in your group.",
 		["Invite Tooltip"] = "This will send BN whispers and invites to everyone of the selected raid.\nIt will also set your BN message. This message will be removed when you are finished inviting.",

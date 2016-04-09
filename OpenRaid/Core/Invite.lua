@@ -39,6 +39,7 @@ GetSlackers:SetScript("OnEvent", function(self, event, ...)
 		if strlower(BNInfo[1]) == strlower(battleTag) then
 			NumInvitedFailed[battleTag] = nil;
 			OpenRaidFrameInviteProgressBarFailed:SetWidth(getAmount(getn(NumInvitedFailed)));
+			-- TODO add checks about 'client' == 'WoW' 
 			if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(all_trim(BNInfo[3])) then
 				BNInviteFriend(toonID)
 				BNSendWhisper(ID, format(L["Invite for event"], toonName))
@@ -140,13 +141,17 @@ local function TryInviteBNFriend(BNFriend)
 		InviteUnit(BNInfo[2])
 		SendChatMessage(format(L["Invite for event"], BNInfo[2]), "WHISPER", nil, BNInfo[2]);
 		-- Errors here aren't trapped?  Just shows in chat log and not in the message given in the pop up?
+		-- What is the benefit of being on the same realm and loosing the other logic?  Going to break for now - Hiketeia 2016-04-08
+		-- It might be to keep the total # of battle.net friends down - if own realm, they dont need to be a battle.net friend and there might be logic in the addfriends that won't friend them if same realm...
 	elseif BNInfo[1] ~= "" then
 		for n=1, BNGetNumFriends() do
-			local ID, _, battleTag, _, _, toonID, _, isOnline = BNGetFriendInfo(n)
+			local ID, _, battleTag, _, _, toonID, client, isOnline = BNGetFriendInfo(n)
+			-- TODO Can I not invite them if they are already in the group?  
 			if strlower(BNInfo[1]) == strlower(battleTag or "") then
 				Pending[BNFriend] = nil;
-				if isOnline then
+				if isOnline and client == "WoW" then
 					local _, toonName, client, realmName = BNGetGameAccountInfo(toonID)
+					print("Inviting " .. toonName .. "-" .. realmName);
 					if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(all_trim(BNInfo[3])) then
 						BNInviteFriend(toonID)
 						BNSendWhisper(ID, format(L["Invite for event"], toonName))
@@ -155,6 +160,11 @@ local function TryInviteBNFriend(BNFriend)
 						BNSendWhisper(ID, format(L["Invite for event wrong character"], toonName .. "-" .. realmName, BNInfo[2] .. "-" .. BNInfo[3]))
 						NumInvitedResponded[BNInfo[1]] = BNFriend .. " (wrong character)";
 					end
+				elseif isOnline and client ~= "WoW" then
+					--print(BNInfo .. "online but in " .. client);
+					AppendBNInfo(BNInfo, " (online but not playing WoW [" .. client .. "])\n")
+					BNSendWhisper(ID, format(L["Invite for event wrong app"], BNInfo[2] .. "-" .. BNInfo[3]))
+					NumInvitedResponded[BNInfo[1]] = BNFriend .. " (wrong app)";
 				else
 					NumInvitedFailed[BNInfo[1]] = BNFriend .. " (not online)";
 					AppendBNInfo(BNInfo, " (not online)\n")
