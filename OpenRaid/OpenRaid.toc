@@ -1,8 +1,9 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: OpenRaid
-## Version: 2.1
+## Version: 2.1.1
 ## Author: Jeremybell
 ## Notes: The AddOn for OpenRaid.org
+## X-Credits: Hiketeia (update for 6.2.4 battle.net changes)
 ## SavedVariables: OR_db
 
 General\Locales.lua

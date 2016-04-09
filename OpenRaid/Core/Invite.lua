@@ -34,13 +34,13 @@ GetSlackers:SetScript("OnEvent", function(self, event, ...)
 		if strlower(BNInfo[1]) == strlower(battleTag) then
 			NumInvitedFailed[battleTag] = nil;
 			OpenRaidFrameInviteProgressBarFailed:SetWidth(getAmount(getn(NumInvitedFailed)));
-			if toonName == BNInfo[2] and realmName == BNInfo[3] then
+			if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(BNInfo[3]) then
 				BNInviteFriend(toonID)
-				BNSendWhisper(ID, L["Invite for event"])
+				BNSendWhisper(ID, format(L["Invite for event"], toonName))
 				Timer.TimeSinceLastUpdate = 0; --We have invited someone again and we should wait till he responds
 				Pending[k] = nil;
 			else
-				BNSendWhisper(ID, L["Invite for event wrong character"])
+				BNSendWhisper(ID, format(L["Invite for event wrong character"], toonName .. "-" .. realmName, BNInfo[2] .. "-" .. BNInfo[3]))
 				NumInvitedResponded[battleTag] = toonName .. "-" .. realmName .. " (online on wrong character)";
 			end
 			UpdateProgressBar();
@@ -133,7 +133,8 @@ local function TryInviteBNFriend(BNFriend)
 	local BNInfo = { strsplit("-", BNFriend) }
 	if BNInfo[3] == GetRealmName() then	--He is from our own realm
 		InviteUnit(BNInfo[2])
-		SendChatMessage(L["Invite for event"], "WHISPER", nil, BNInfo[2]);
+		SendChatMessage(format(L["Invite for event"], BNInfo[2]), "WHISPER", nil, BNInfo[2]);
+		-- Errors here aren't trapped?  Just shows in chat log and not in the message given in the pop up?
 	elseif BNInfo[1] ~= "" then
 		for n=1, BNGetNumFriends() do
 			local ID, _, battleTag, _, _, toonID, _, isOnline = BNGetFriendInfo(n)
@@ -141,12 +142,12 @@ local function TryInviteBNFriend(BNFriend)
 				Pending[BNFriend] = nil;
 				if isOnline then
 					local _, toonName, _, realmName = BNGetGameAccountInfo(toonID)
-					if toonName == BNInfo[2] and realmName == BNInfo[3] then
+					if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(BNInfo[3]) then
 						BNInviteFriend(toonID)
-						BNSendWhisper(ID, L["Invite for event"])
+						BNSendWhisper(ID, format(L["Invite for event"], toonName))
 					else
-						AppendBNInfo(BNInfo, " (online on wrong character)\n")
-						BNSendWhisper(ID, L["Invite for event wrong character"])
+						AppendBNInfo(BNInfo, " (online on wrong character [" .. toonName .. "-" .. realmName .. "]\n")
+						BNSendWhisper(ID, format(L["Invite for event wrong character"], toonName .. "-" .. realmName, BNInfo[2] .. "-" .. BNInfo[3]))
 						NumInvitedResponded[BNInfo[1]] = BNFriend .. " (wrong character)";
 					end
 				else
@@ -337,7 +338,7 @@ local function createInviteListEntry(self, status, btag, button)
 		end)
 		Button:Show();
 	else
-		Button:Hide();
+		-- Button:Hide(); -- Getting error on this, not sure why?  Comment it out, or leave the error?
 	end
 end
 

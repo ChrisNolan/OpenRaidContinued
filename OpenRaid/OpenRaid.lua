@@ -11,6 +11,10 @@
 	----------------------------------------------------------------------
 	Version 2.0
 		--Initial release of revamped AddOn
+	Version 2.1
+		--
+	Version 2.1.1
+		-- Fixes for 6.2.4's Battle.net updates by Hiketeia-Emerald Dream
 
 ]]
 
@@ -183,6 +187,7 @@ do
 					BNSetCustomMessage(format(L["BN whisperinvite message"], N));
 				else
 					BNSetCustomMessage(format(L["BN whisperinvite message own"], OR_db.Options["Whisperword"], N));
+					print("OpenRaid: Setting whisperword " .. own); -- DEBUG Hike
 				end
 				OpenRaidFrameInvitePlusInvite:SetText(L["Stop whisper invite"]);
 			end
@@ -1455,6 +1460,7 @@ do
 		--Whisper correct event number for party invite
 		elseif event == "CHAT_MSG_BN_WHISPER" then
 			local message = select(1, ...);
+			print("OpenRaid received whisper: " .. message); -- DEBUG Hike
 			local ID = select(13, ...);
 			if (self.CHAT_MSG_BN_WHISPER) then
 				if message and message == Whisperword then
@@ -1463,6 +1469,7 @@ do
 					end
 					local toonID = select(16, BNGetGameAccountInfo(ID));
 					BNInviteFriend(toonID);
+					print("OpenRaid Whisper Invite: " .. toonID); -- DEBUG Hike
 				end
 			end
 			if strfind(message, "vent") or strfind(message, "or") then
