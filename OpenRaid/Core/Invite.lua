@@ -40,7 +40,8 @@ GetSlackers:SetScript("OnEvent", function(self, event, ...)
 			NumInvitedFailed[battleTag] = nil;
 			OpenRaidFrameInviteProgressBarFailed:SetWidth(getAmount(getn(NumInvitedFailed)));
 			-- TODO add checks about 'client' == 'WoW' 
-			if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(all_trim(BNInfo[3])) then
+			print("Inviting Slackers " .. toonName .. "-" .. realmName);
+			if strlower(toonName) == strlower(BNInfo[2]) then -- TODO Hack why is the realmName check failing? -- and strlower(realmName) == strlower(all_trim(BNInfo[3])) then
 				BNInviteFriend(toonID)
 				BNSendWhisper(ID, format(L["Invite for event"], toonName))
 				Timer.TimeSinceLastUpdate = 0; --We have invited someone again and we should wait till he responds
@@ -119,6 +120,7 @@ end
 local function IsCurrentlyIngroup(givenName)
 	local BNInfo = { strsplit("-", givenName) }
 	local Name = BNInfo[2] .. "-" .. BNInfo[3];
+	-- TODO Debug if this is working correctly with the realm names and spaces etc - e.g. EchoIsles vs Echo Isles etc  Hike
 	if IsInRaid(LE_PARTY_CATEGORY_HOME) and (select(2, GetInstanceInfo()) == "none" or select(2, GetInstanceInfo()) == "raid") then --Apparently IsInRaid() returns true in arenas
 		for i=1, GetNumGroupMembers() do
 			if GetFullUnitName("raid" .. i) == Name then
@@ -137,12 +139,13 @@ end
 
 local function TryInviteBNFriend(BNFriend)
 	local BNInfo = { strsplit("-", BNFriend) }
-	if BNInfo[3] == GetRealmName() then	--He is from our own realm
+	if BNInfo[3] == "my realm" then -- GetRealmName() then	--He is from our own realm
 		InviteUnit(BNInfo[2])
 		SendChatMessage(format(L["Invite for event"], BNInfo[2]), "WHISPER", nil, BNInfo[2]);
 		-- Errors here aren't trapped?  Just shows in chat log and not in the message given in the pop up?
 		-- What is the benefit of being on the same realm and loosing the other logic?  Going to break for now - Hiketeia 2016-04-08
 		-- It might be to keep the total # of battle.net friends down - if own realm, they dont need to be a battle.net friend and there might be logic in the addfriends that won't friend them if same realm...
+		-- "Your party is full" that I'm seeing in Kess's screenshots might be related to here -- these invites might not trigger the ConvertToRaid() logic?
 	elseif BNInfo[1] ~= "" then
 		for n=1, BNGetNumFriends() do
 			local ID, _, battleTag, _, _, toonID, client, isOnline = BNGetFriendInfo(n)
@@ -152,7 +155,7 @@ local function TryInviteBNFriend(BNFriend)
 				if isOnline and client == "WoW" then
 					local _, toonName, client, realmName = BNGetGameAccountInfo(toonID)
 					print("Inviting " .. toonName .. "-" .. realmName);
-					if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(all_trim(BNInfo[3])) then
+					if strlower(toonName) == strlower(BNInfo[2]) then -- TODO Hack why is the realmName check failing? -- and strlower(realmName) == strlower(all_trim(BNInfo[3])) then
 						BNInviteFriend(toonID)
 						BNSendWhisper(ID, format(L["Invite for event"], toonName))
 					else
@@ -353,7 +356,7 @@ local function createInviteListEntry(self, status, btag, button)
 		end)
 		Button:Show();
 	else
-		-- Button:Hide(); -- Getting error on this, not sure why?  Comment it out, or leave the error?
+		Button:Hide(); -- Getting error on this, not sure why?  Comment it out, or leave the error?
 	end
 end
 

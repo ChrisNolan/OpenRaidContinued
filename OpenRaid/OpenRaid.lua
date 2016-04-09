@@ -13,7 +13,7 @@
 		--Initial release of revamped AddOn
 	Version 2.1
 		--
-	Version 2.1.1
+	Version 2.1.1d
 		-- Fixes for 6.2.4's Battle.net updates by Hiketeia-Emerald Dream
 
 ]]
