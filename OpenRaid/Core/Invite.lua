@@ -15,6 +15,11 @@ local function getAmount(num)
 	return (num/(NumInvited + getn(NumInvitedFailed) + getn(NumInvitedResponded)) * 200)
 end
 
+local function all_trim(s)
+   -- return s:match( "^%s*(.-)%s*$" )
+   return string.gsub(s, "%s+", "")
+end
+
 local function UpdateProgressBar()
 	OpenRaidFrameInviteProgressBarFailed:SetWidth(getAmount(getn(NumInvitedFailed)));
 	OpenRaidFrameInviteProgressBarResponded:SetWidth(getAmount(getn(NumInvitedResponded)));
@@ -28,20 +33,20 @@ GetSlackers:SetScript("OnEvent", function(self, event, ...)
 	local ID = ...;
 	local _, _, battleTag, _, _, toonID = BNGetFriendInfoByID(ID)
 	if not battleTag then return end
-	local _, toonName, _, realmName = BNGetGameAccountInfo(toonID)
+	local _, toonName, client, realmName = BNGetGameAccountInfo(toonID)
 	for k,v in pairs(Pending) do
 		local BNInfo = { strsplit("-", k) }
 		if strlower(BNInfo[1]) == strlower(battleTag) then
 			NumInvitedFailed[battleTag] = nil;
 			OpenRaidFrameInviteProgressBarFailed:SetWidth(getAmount(getn(NumInvitedFailed)));
-			if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(BNInfo[3]) then
+			if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(all_trim(BNInfo[3])) then
 				BNInviteFriend(toonID)
 				BNSendWhisper(ID, format(L["Invite for event"], toonName))
 				Timer.TimeSinceLastUpdate = 0; --We have invited someone again and we should wait till he responds
 				Pending[k] = nil;
 			else
 				BNSendWhisper(ID, format(L["Invite for event wrong character"], toonName .. "-" .. realmName, BNInfo[2] .. "-" .. BNInfo[3]))
-				NumInvitedResponded[battleTag] = toonName .. "-" .. realmName .. " (online on wrong character)";
+				NumInvitedResponded[battleTag] = client .. ": " .. toonName .. "-" .. realmName .. " (online on wrong character)";
 			end
 			UpdateProgressBar();
 			return
@@ -141,12 +146,12 @@ local function TryInviteBNFriend(BNFriend)
 			if strlower(BNInfo[1]) == strlower(battleTag or "") then
 				Pending[BNFriend] = nil;
 				if isOnline then
-					local _, toonName, _, realmName = BNGetGameAccountInfo(toonID)
-					if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(BNInfo[3]) then
+					local _, toonName, client, realmName = BNGetGameAccountInfo(toonID)
+					if strlower(toonName) == strlower(BNInfo[2]) and strlower(realmName) == strlower(all_trim(BNInfo[3])) then
 						BNInviteFriend(toonID)
 						BNSendWhisper(ID, format(L["Invite for event"], toonName))
 					else
-						AppendBNInfo(BNInfo, " (online on wrong character [" .. toonName .. "-" .. realmName .. "]\n")
+						AppendBNInfo(BNInfo, " (online on wrong character [" .. client .. ": " .. toonName .. "-" .. realmName .. "]\n")
 						BNSendWhisper(ID, format(L["Invite for event wrong character"], toonName .. "-" .. realmName, BNInfo[2] .. "-" .. BNInfo[3]))
 						NumInvitedResponded[BNInfo[1]] = BNFriend .. " (wrong character)";
 					end
